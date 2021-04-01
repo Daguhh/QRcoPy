@@ -29,9 +29,6 @@ class Example(QWidget):
 
     def initUI(self):
 
-        self.dx = 0
-        self.dy = 0
-
         grid = QGridLayout()
 
         textqr = QLabel('Enter text to convert')
@@ -44,7 +41,6 @@ class Example(QWidget):
         self.label = QLabel(self)
         self.label.setPixmap(self.pixmap)
         grid.addWidget(self.label, 0, 0, 5, 5)
-        #grid.addItem(pixmap,1,0,4,4)
 
         btn = QPushButton('Generate', self)
         btn.setToolTip('Generate qr code from text')
@@ -57,7 +53,6 @@ class Example(QWidget):
         self.setGeometry(300, 300, 350, 200)
         self.setWindowTitle('Generate QRcodes')
 
-
         self.show()
 
     def generate(self):
@@ -65,19 +60,10 @@ class Example(QWidget):
         text = self.textboxqr.toPlainText()
         img = qrcode.make(text)
         self.qim = ImageQt(img)
-        qim = self.qim.scaledToHeight(200)
-        self.pixmap = QPixmap.fromImage(qim)
-        import ipdb
-        #ipdb.set_trace()
-        self.label.setPixmap(self.pixmap)
+
+        self.resizeEvent(None)
 
     def resizeEvent(self, e):
-
-        print(self.label.size())
-        self.dx += e.size().width() - e.oldSize().width()
-        self.dy += e.size().height() - e.oldSize().height()
-        #dx, dy = [x2 - x1 for x1, x2 in zip(e.size()., e.oldSize())]
-        print(f'dx : {self.dx}, dy : {self.dy}')
 
         qim = self.qim.scaledToHeight(self.label.size().height()-10)
         self.pixmap = QPixmap.fromImage(qim)
